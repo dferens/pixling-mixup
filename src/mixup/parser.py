@@ -2,80 +2,7 @@
 Parse database file (see docs/db-sample.txt)
 """
 
-class ClassSkill:
-    """
-    Describes player's ability to play given class.
-    """
-    __slots__ = ('_class', '_type')
-
-    SOLDIER = 'soldier'
-    SCOUT = 'scout'
-    MEDIC = 'medic'
-    DEMOMAN = 'demoman'
-    CLASSES = set((SOLDIER, SCOUT, MEDIC, DEMOMAN))
-
-    MAIN = 'main'
-    ADDITIONAL = 'additional'
-    NONMAIN = 'nonmain'
-    TYPES = set((MAIN, ADDITIONAL, NONMAIN))
-
-    def __init__(self, class_, type):
-        assert class_ in self.CLASSES
-        assert type in self.TYPES
-        self._class = class_
-        self._type = type
-
-    def __repr__(self):
-        return '{}={}'.format(
-            self._class.upper(),
-            self._type
-        )
-
-    @property
-    def game_class(self):
-        return self._class
-
-    @property
-    def type(self):
-        return self._type
-
-
-class PlayerInfo:
-
-    __slots__ = ('_nickname', '_skill', '_classes')
-
-    PREM = 'prem'
-    HIGH = 'high'
-    MID = 'mid'
-    OPEN = 'open'
-    SKILLS = set((PREM, HIGH, MID, OPEN))
-
-    def __init__(self, nickname, skill, classes):
-        assert skill in self.SKILLS
-        self._nickname = nickname
-        self._skill = skill
-        self._classes = tuple(classes)
-
-    def __repr__(self):
-        classes_str = ', '.join(repr(c) for c in self._classes)
-        return '<PlayerInfo {0} [{1}] {2}>'.format(
-            self._nickname,
-            self._skill.upper(),
-            classes_str
-        )
-
-    @property
-    def nickname(self):
-        return self._nickname
-
-    @property
-    def skill(self):
-        return self._skill
-
-    @property
-    def classes(self):
-        return self._classes
-
+from .core import ClassSkill, PlayerInfo
 
 
 def _is_medic_only(class_string):
@@ -96,19 +23,30 @@ def _parse_line(line_text):
         additional_classes = set()
     else:
         additional_classes = _parse_classes_token(tokens[3])
+        # Idiots check #1
+        if main_class in additional_classes:
+            additional_classes.remove(main_class)
 
     classes = set()
     if _is_medic_only(main_class):
-        classes.add(ClassSkill(ClassSkill.MEDIC, ClassSkill.MAIN))
+        if skill == PlayerInfo.PREM:
+            raise Exception('Prem player can not be "medic only"')
+        else:
+            classes.add(ClassSkill(ClassSkill.MEDIC, ClassSkill.MAIN))
     else:
-        classes.add(ClassSkill(main_class, ClassSkill.MAIN))
+        nonmain_classes = ClassSkill.CLASSES.difference(additional_classes)
+        nonmain_classes.remove(main_class)
+
+        for c in nonmain_classes:
+            classes.add(ClassSkill(c, ClassSkill.NONMAIN))
+
         for c in additional_classes:
             classes.add(ClassSkill(c, ClassSkill.ADDITIONAL))
 
-        for c in ClassSkill.CLASSES.difference(classes):
-            classes.add(ClassSkill(c, ClassSkill.NONMAIN))
+        if skill != PlayerInfo.PREM:
+            classes.add(ClassSkill(main_class, ClassSkill.MAIN))
 
-    info = PlayerInfo(nickname, skill, classes)
+    info = PlayerInfo(nickname, skill, tuple(classes))
     return info
 
 

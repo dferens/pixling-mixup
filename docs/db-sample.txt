@@ -1,0 +1,49 @@
+high		dima		Soldier		Medic, Demoman
+high		unikal		Demoman		Scout
+high		Tamerlan	Medic		Soldier
+open		nazol		Demoman		Soldier, Scout
+open		Joe.		Scout		Soldier
+high		Ocelot		Medic		Soldier, Scout
+open		yakor'		Soldier		Scout
+prem		Catman		Scout		Medic
+mid		Cholera		Medic	
+high		Lindsey		Demoman		Soldier, Scout
+mid		Tken		Scout		Scout
+high		Avogadro	Medic		Medic, Demoman, Soldier, Scout
+mid		vice		Medic only	
+open		olBaa		Scout		Demoman, Scout
+open		TOSS		Soldier		Medic, Demoman, Soldier, Scout
+open		maxxx.lfc	Demoman		Soldier, Scout
+mid		lukorepka	Scout		Medic
+open		Marshall	Soldier		Demoman
+mid		WRU		Soldier		Medic, Soldier, Scout
+open		Belarka		Medic only	
+open		Filosov		Soldier		Medic, Demoman
+prem		Shyyou		Soldier		Medic, Demoman, Scout
+high		Mr.Epic		Scout		Demoman, Soldier
+open		ino		Scout		Scout
+mid		Demetrius	Soldier		Demoman
+high		fat0n		Scout	
+mid		Detoed.		Medic		Demoman
+mid		sammie		Soldier		Demoman
+high		sano		Demoman		Demoman
+open		Spicy		Scout		Soldier
+open		Cherie		Demoman		Soldier
+open		loizzz		Scout		Medic
+high		RED		Scout		Soldier
+open		Fellini		Medic		Scout
+prem		lippy		Soldier		Demoman, Scout
+prem		Death		Demoman		Soldier, Scout
+open		Sanek		Scout		Scout
+prem		UnIkAlNij BOec	Soldier		Soldier, Scout
+open		evrion		Scout		Scout
+mid		Rama		Soldier		Medic, Scout
+open		Dunyash		Soldier		Scout
+open		simba		Soldier		Scout
+open		Paul		Scout		Medic
+open		Deity		Scout		Scout
+open		WreAZ		Soldier		Scout
+open		Rolandskvadet	Soldier	
+open		BLAKE		Scout		Soldier
+high		d1egos		Medic only	
+mid		_ShYr!k		Demoman		Medic, Soldier, Scout

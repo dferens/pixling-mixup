@@ -133,9 +133,9 @@ class PlayerInfo:
         }
         SKILL_STRENGTH = {
             self.PREM: 16,
-            self.HIGH: 8,
-            self.MID: 4,
-            self.OPEN: 2,
+            self.HIGH: 10,
+            self.MID: 6,
+            self.OPEN: 4,
         }
         class_type = TYPE_COEFFS[self.get_class_type(game_class)]
         return SKILL_STRENGTH[self.skill] * class_type

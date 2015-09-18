@@ -433,17 +433,20 @@ def make_teams(players):
 
     current_build = initial_build
     current_target = target_fn(current_build)
-    print('Initial target: ', current_target)
+    print('-' * 50)
+    print('Initial strength variance: ', current_target)
 
     while True:
         new_build = _shuffle_step(current_build)
         new_target = target_fn(new_build)
-        print('New target: ', new_target)
 
         if new_target < current_target:
+            print('New strength variance: ', new_target)
             current_build = new_build
             current_target = new_target
         else:
+            print('Found local minimum')
             break
 
+    print('-' * 50)
     return current_build

@@ -1,5 +1,5 @@
+import random
 from statistics import variance
-from random import choice as rand_choice
 
 
 class ClassSkill:
@@ -115,31 +115,6 @@ class PlayerInfo:
         active_classes = [c for c in self._classes if c.type != c.NONMAIN]
         return len(active_classes)
 
-    def calc_strength(self, game_class):
-        """
-        Specific metric which indicates how strong player is on given class.
-
-        @param str game_class
-        @rtype float
-        """
-        # 1. Prem player playing additional class should be ~= high player
-        # playing main, while prem player playing nonmain should be ~= high
-        # player playing additional class.
-        # Same applies for (high, mid) and (mid, open) pairs.
-        TYPE_COEFFS = {
-            ClassSkill.MAIN: 1,
-            ClassSkill.ADDITIONAL: 0.75,
-            ClassSkill.NONMAIN: 0.4
-        }
-        SKILL_STRENGTH = {
-            self.PREM: 16,
-            self.HIGH: 10,
-            self.MID: 6,
-            self.OPEN: 4,
-        }
-        class_type = TYPE_COEFFS[self.get_class_type(game_class)]
-        return SKILL_STRENGTH[self.skill] * class_type
-
     def get_preferred_class_seq(self):
         """
         Returns preferred player's game class sequence.
@@ -154,6 +129,33 @@ class PlayerInfo:
         }
         sorted_classes = sorted(self._classes, key=lambda c: order[c.type])
         return [c.game_class for c in sorted_classes]
+
+
+def calc_player_strength(player, game_class):
+    """
+    Specific metric which indicates how strong player is on given class.
+
+    @param PlayerInfo player
+    @param str game_class
+    @rtype float
+    """
+    # 1. Prem player playing additional class should be ~= high player
+    # playing main, while prem player playing nonmain should be ~= high
+    # player playing additional class.
+    # Same applies for (high, mid) and (mid, open) pairs.
+    TYPE_COEFFS = {
+        ClassSkill.MAIN: 1,
+        ClassSkill.ADDITIONAL: 0.75,
+        ClassSkill.NONMAIN: 0.4
+    }
+    SKILL_STRENGTH = {
+        PlayerInfo.PREM: 4.0,
+        PlayerInfo.HIGH: 3.0,
+        PlayerInfo.MID:  2.0,
+        PlayerInfo.OPEN: 1.0,
+    }
+    class_type = TYPE_COEFFS[player.get_class_type(game_class)]
+    return SKILL_STRENGTH[player.skill] * class_type
 
 
 class Team:
@@ -209,7 +211,7 @@ class Team:
         Calculates team's overal strength.
         """
         return sum(
-            p.calc_strength(game_class)
+            calc_player_strength(p, game_class)
             for p, game_class in self._game_classes.items()
         )
 
@@ -243,7 +245,9 @@ class TeamsBuild:
         #
         # Step 2: add other players, start with single-class ones
         #
-        ordered_players = sorted(remaining_players, key=PlayerInfo.get_variability)
+        to_add = list(remaining_players)
+        random.shuffle(to_add)
+        ordered_players = sorted(to_add, key=PlayerInfo.get_variability)
         for p in ordered_players:
             preferred_class = p.get_preferred_class_seq()[0]
             for t in teams:
@@ -265,7 +269,9 @@ class TeamsBuild:
         #
         # Step 4: fill remaining teams
         #
-        ordered_players = sorted(build.remaining_players, key=PlayerInfo.get_variability)
+        to_add = list(build.remaining_players)
+        random.shuffle(to_add)
+        ordered_players = sorted(to_add, key=PlayerInfo.get_variability)
         for p in ordered_players:
             for preferred_class in p.get_preferred_class_seq():
                 found_team = False
@@ -385,11 +391,11 @@ class SwapTransaction:
 def gen_transactions(build, team_from, team_to):
     for player_from in team_from.get_players():
         game_class = team_from.get_player_class(player_from)
-        player_from_strength = player_from.calc_strength(game_class)
+        player_from_strength = calc_player_strength(player_from, game_class)
 
         for player_to in team_to.get_players():
             if team_to.get_player_class(player_to) == game_class:
-                if player_from_strength > player_to.calc_strength(game_class):
+                if player_from_strength > calc_player_strength(player_to, game_class):
                     yield SwapTransaction(
                         team_from.id, player_from,
                         team_to.id, player_to

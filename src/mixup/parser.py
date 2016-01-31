@@ -37,8 +37,10 @@ def _parse_line(line_text):
         nonmain_classes = ClassSkill.CLASSES.difference(additional_classes)
         nonmain_classes.remove(main_class)
 
-        for c in nonmain_classes:
-            classes.add(ClassSkill(c, ClassSkill.NONMAIN))
+        # Open players should not play nonmain classes
+        if skill != 'open':
+            for c in nonmain_classes:
+                classes.add(ClassSkill(c, ClassSkill.NONMAIN))
 
         for c in additional_classes:
             classes.add(ClassSkill(c, ClassSkill.ADDITIONAL))

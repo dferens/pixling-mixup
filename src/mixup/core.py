@@ -146,7 +146,7 @@ def calc_player_strength(player, game_class):
     TYPE_COEFFS = {
         ClassSkill.MAIN: 1,
         ClassSkill.ADDITIONAL: 0.75,
-        ClassSkill.NONMAIN: 0.4
+        ClassSkill.NONMAIN: 0.5
     }
     SKILL_STRENGTH = {
         PlayerInfo.PREM: 4.0,
